@@ -33,6 +33,7 @@ interface ILogin {
   open: boolean;
   close: () => void;
   editType?: "login" | "signUp" | "forgetPassword";
+  isDemo?: boolean;
 }
 
 const { useBreakpoint } = Grid;
@@ -46,7 +47,7 @@ const Login: React.FC<ILogin> = (props) => {
    * close 關閉彈窗時執行
    * editType 指定目前情境是[登入][註冊][忘記密碼]
    */
-  const { open, close, editType } = props;
+  const { open, close, editType, isDemo } = props;
   const { set_c_user, c_showPortal } = useContext(GlobalContext);
   const [form] = Form.useForm();
 
@@ -160,7 +161,7 @@ const Login: React.FC<ILogin> = (props) => {
       placement: "topLeft",
       description: (
         <div>
-          {res.data.field && <Tag>{res.data.field}</Tag>}
+          {res.data?.field && <Tag>{res.data?.field}</Tag>}
           <span>{res.data.error}</span>
         </div>
       ),
@@ -169,6 +170,7 @@ const Login: React.FC<ILogin> = (props) => {
 
   // 確定送出
   const onFinish = async (values: IUser) => {
+    console.log("🚀 ~ file: index.tsx:173 ~ onFinish ~ values:", values);
     if (s_editType === "login") {
       set_s_loading(true);
       const res = await login(trimValues(values));
@@ -223,6 +225,12 @@ const Login: React.FC<ILogin> = (props) => {
       }
     }
   }, [open, editType]);
+
+  useEffect(() => {
+    if (isDemo) {
+      onFinish({ email: "hookloop15@gmail.com", password: "password" } as IUser);
+    }
+  }, [isDemo]);
 
   return (
     <Modal width={getWidth()} destroyOnClose open={open} onCancel={handleCancel} footer={null}>

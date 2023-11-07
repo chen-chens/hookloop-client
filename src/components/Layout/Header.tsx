@@ -30,6 +30,7 @@ const Header: React.FC = () => {
   const [s_showLogin, set_s_showLogin] = useState(false);
   const [s_loginEditType, set_s_loginEditType] = useState<"login" | "signUp">("login");
   const [s_Breadcrumbs, set_s_Breadcrumbs] = useState<any[]>([]);
+  const [s_demo, set_s_demo] = useState(false);
 
   // Header 上按鈕的基礎樣式
   const BTN_STYLE = "h-[32px] w-[105px] font-bold";
@@ -49,6 +50,7 @@ const Header: React.FC = () => {
   };
 
   useEffect(() => {
+    set_s_demo(false);
     if (!router.query.id || !c_workspaces) {
       set_s_Breadcrumbs([]);
       return;
@@ -107,6 +109,16 @@ const Header: React.FC = () => {
         <>
           {/* 大尺寸螢幕使用的 menu */}
           <div className="hidden gap-[24px] md:flex">
+            <Button
+              type="primary"
+              className={`${BTN_STYLE} bg-[#FFA940]`}
+              onClick={() => {
+                set_s_demo(true);
+                set_s_loginEditType("login");
+              }}
+            >
+              Demo
+            </Button>
             <Button className={`${BTN_STYLE} text-black`} onClick={() => showLogin("login")}>
               Log in
             </Button>
@@ -147,7 +159,7 @@ const Header: React.FC = () => {
       )}
 
       {/* 登入的彈窗 */}
-      <Login open={s_showLogin} close={closeLogin} editType={s_loginEditType} />
+      <Login open={s_showLogin} close={closeLogin} editType={s_loginEditType} isDemo={s_demo} />
     </header>
   );
 };
